@@ -1,32 +1,25 @@
 const express = require('express');
-const loadData = require("./LoadData")
+var mongoose=require("mongoose");
 const cors= require('cors')
 const app = express();
-const port = 3000;
+const routes=require("./routes");
+const port = 4000;
+var url = "mongodb://localhost:27017/Budget";
+var budgetModel=require('./models/budgetData');
+const loadData = require("./LoadData");
+const router = express.Router()
 
+
+mongoose.connect(url,{useNewUrlParser:true, useUnifiedTopology:true})
+        .then(()=>{
+            app.use(express.json())
+            app.use("/api",routes)
+        })
+        .catch((connectionError)=>{
+          console.log(connectionError)
+        })
+		
 app.use(cors());
-
-
-const budget = {
-    myBudget: [
-
-    {
-        title: 'Eat out',
-        budget: 45
-    },
-    {
-        title: 'Rent',
-        budget: 375
-    },
-    {
-        title: 'Grocery',
-        budget: 110
-    },
-
-    ]
-};
-
-
 
 
 app.get('/budget',(req,res) => {
